@@ -25,6 +25,7 @@ public class ItemController {
 	
 	@GetMapping
 	public ResponseEntity<List<Item>> getItems() {
+		log.info("Retrieving items");
 		return ResponseEntity.ok(itemRepository.findAll());
 	}
 	

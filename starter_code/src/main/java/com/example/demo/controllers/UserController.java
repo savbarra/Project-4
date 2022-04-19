@@ -38,11 +38,13 @@ public class UserController {
 
 	@GetMapping("/id/{id}")
 	public ResponseEntity<User> findById(@PathVariable Long id) {
+		log.info("find user with id: {}", id);
 		return ResponseEntity.of(userRepository.findById(id));
 	}
 	
 	@GetMapping("/{username}")
 	public ResponseEntity<User> findByUserName(@PathVariable String username) {
+		log.info("find user with username {} is requested", username);
 		User user = userRepository.findByUsername(username);
 		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
 	}
@@ -55,12 +57,12 @@ public class UserController {
 		cartRepository.save(cart);
 		user.setCart(cart);
 		if(createUserRequest.getPassword().length() < 10 || !createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())) {
-			log.error("Password requirments not met", createUserRequest.getPassword());
+			log.error("Error with user password. Can not create User {}", createUserRequest.getUsername());
 			return ResponseEntity.badRequest().build();
 		}
 		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
 		userRepository.save(user);
-		log.info("Added user account " + createUserRequest.getUsername());
+		log.info("Create User with UserName {} is received", createUserRequest.getUsername());
 		return ResponseEntity.ok(user);
 	}
 	
